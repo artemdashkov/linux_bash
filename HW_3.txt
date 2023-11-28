@@ -2,11 +2,16 @@
 	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 123321) John
 	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 321123) Daisy
 	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 332211) Michael
+	
+	useradd John
+	passwd John
 
 Создать две директории: John_App и Application_Main (обе должны находиться в /tmp).
 	mkdir /tmp/John_App /tmp/Application_Main
 	
 В них создать виртуальные среды Python (названия можно дать по собственному усмотрению). John работает над проектом  John_App, Daisy и Michael — над Application_Main.
+	apt install python3.10-venv
+	
 	cd /tmp/John_App
 	python3.10 -m venv env_John_App
 
@@ -14,6 +19,11 @@
 	python3.10 -m venv env_Application_Main
 	
 Чтобы обеспечить эффективную работу, надо назначить верные права доступа к соответствующим директориям проектов (к примеру, это можно сделать путем создания групп и включения в них пользователей; названия групп — по собственному усмотрению).
+
+	groupadd group_John
+	gpasswd group_John
+	usermod -aG group_John John 
+
 	sudo groupadd -p $(perl -e 'print crypt($ARGV[0], "password")' 123321) group_John_App
 	sudo usermod -a -G group_John_App John
 	
