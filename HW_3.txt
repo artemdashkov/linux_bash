@@ -1,0 +1,58 @@
+Необходимо создать трех пользователей в системе: John,  Daisy  и Michael (пароли пользователей: John — 123321; Daisy — 321123; Michael — 332211).
+	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 123321) John
+	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 321123) Daisy
+	sudo useradd -p $(perl -e 'print crypt($ARGV[0], "password")' 332211) Michael
+
+Создать две директории: John_App и Application_Main (обе должны находиться в /tmp).
+	mkdir /tmp/John_App /tmp/Application_Main
+	
+В них создать виртуальные среды Python (названия можно дать по собственному усмотрению). John работает над проектом  John_App, Daisy и Michael — над Application_Main.
+	cd /tmp/John_App
+	python3.10 -m venv env_John_App
+
+	cd /tmp/Application_Main
+	python3.10 -m venv env_Application_Main
+	
+Чтобы обеспечить эффективную работу, надо назначить верные права доступа к соответствующим директориям проектов (к примеру, это можно сделать путем создания групп и включения в них пользователей; названия групп — по собственному усмотрению).
+	sudo groupadd -p $(perl -e 'print crypt($ARGV[0], "password")' 123321) group_John_App
+	sudo usermod -a -G group_John_App John
+	
+	sudo groupadd -p $(perl -e 'print crypt($ARGV[0], "password")' 321123) group_Application_Main
+	sudo usermod -a -G group_John_App
+	sudo usermod -a -G group_Application_Main Daisy
+	sudo usermod -a -G group_Application_Main Michael
+
+Созданные виртуальные среды Python должны запускаться, содержать импортированные библиотеки Python и содержать по одному скрипту на Python.
+
+John_App содержит библиотеку numpy. Скрипт в этой виртуальной среде должен создавать одномерный массив из десяти случайных чисел и выводить полученные значения элементов массива. 
+
+Application_Main содержит библиотеку requests. Скрипт в данной виртуальной среде должен посылать get-запрос на адрес https://urfu.ru/ru, затем выводить полученные заголовки.
+
+
+
+  
+
+
+  339  cd /tmp
+  340  sudo chown :group_John_App John_App
+  341  chmod 770 John_App
+  342  sudo chown :group_Application_Main Application_Main
+  343  chmod 770 Application_Main
+  344  source /tmp/John_App/env_John_App/bin/activate
+  345  pip install numpy
+  346  deactivate
+  347  source /tmp/Application_Main/env_Application_Main/bin/activate
+  348  pip install requests
+  349  deactivate
+  350  cd /tmp/John_App/env_John_App
+  351  cat > script_john_app.py
+  352  chmod 770 script_john_app.py
+  353  source /tmp/John_App/env_John_App/bin/activate
+  354  ./script_john_app.py
+  355  deactivate
+  356  cd /tmp/John_App/env_Application_Main
+  357  cd /tmp/Application_Main/env_Application_Main
+  358  cat > script_application_main.py
+  359  chmod 770 script_application_main.py
+  360  ./script_application_main.py
+  361  history 300 > my_bash_history.txt

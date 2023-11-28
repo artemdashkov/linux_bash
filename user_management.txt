@@ -24,7 +24,7 @@ su user 				-смена пользователя без перехода в до
 sudo useradd user_1 (или useradd user_1 для суперпользователя)
 	-создает пользователя БЕЗ пароля, папок и т.д.
 	
-sudo passwd user_1 (или useradd user_1 для суперпользователя)
+sudo passwd user_1 (или passwd user_1 для суперпользователя)
 	-устанавливает пароль пользователя
 
 sudo adduser user_2 (или adduser user_2 для суперпользователя)
