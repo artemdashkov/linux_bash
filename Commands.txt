@@ -275,8 +275,8 @@ cd /
 du -h dirname
 	—посмотреть размер каталога dirname;
 	
-find file
-	—найти файл с именем file;
+find . -name "file"
+	—найти файл с именем file в текущей папке;
 
 find / -user student –print
 	-найти все файлы, принадлежащие пользователю student:
